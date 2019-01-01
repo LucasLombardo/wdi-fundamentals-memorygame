@@ -1,13 +1,13 @@
 "use strict";
 
-const cards = [
+let cards = [
   { rank: "queen", suit: "hearts", cardImg: "images/queen-of-hearts.png" },
   { rank: "queen", suit: "diamonds", cardImg: "images/queen-of-diamonds.png" },
   { rank: "king", suit: "hearts", cardImg: "images/king-of-hearts.png" },
   { rank: "king", suit: "diamonds", cardImg: "images/king-of-diamonds.png" }
 ];
 
-const cardsInPlay = [];
+let cardsInPlay = [];
 
 function checkForMatch(cardId, cardClicked) {
   cardClicked.setAttribute("src", cards[cardId].cardImg);
@@ -41,10 +41,6 @@ function openModal(message) {
 
 function flipCard() {
   const cardId = this.getAttribute("data-id");
-  console.log("user flipped " + cards[cardId].rank);
-  console.log(
-    `flipped suit = ${cards[cardId].suit} and img = ${cards[cardId].cardImg}`
-  );
   cardsInPlay.push(cards[cardId].rank);
   checkForMatch(cardId, this);
 }
@@ -57,6 +53,28 @@ function createBoard() {
     cardElement.addEventListener("click", flipCard);
     document.querySelector("#game-board").appendChild(cardElement);
   }
+}
+
+function resetBoard() {
+  //randomize cards
+  cards = randomizeArr(cards);
+  // reset cards in play and clar board
+  cardsInPlay = [];
+  document.querySelector("#game-board").innerHTML = "";
+  // set board
+  createBoard();
+}
+
+function randomizeArr(arr) {
+  // randomizes an arrays order
+  const randArr = [];
+  while (randArr.length < arr.length) {
+    const rand = Math.round(Math.random() * (arr.length - 1));
+    if (randArr.indexOf(arr[rand]) === -1) {
+      randArr.push(arr[rand]);
+    }
+  }
+  return randArr;
 }
 
 createBoard();
