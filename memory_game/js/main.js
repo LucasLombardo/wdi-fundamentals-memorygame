@@ -13,11 +13,30 @@ function checkForMatch(cardId, cardClicked) {
   cardClicked.setAttribute("src", cards[cardId].cardImg);
   if (cardsInPlay.length === 2) {
     if (cardsInPlay[0] === cardsInPlay[1]) {
-      alert("You found a match!");
+      openModal("You found a match!");
     } else {
-      alert("Sorry, try again.");
+      openModal("Sorry, try again.");
     }
   }
+}
+
+function openModal(message) {
+  const modal = document.querySelector("#modal");
+  const msg = document.querySelector("#msg");
+  const btn = document.querySelector("#close-modal");
+  // set message and open modal
+  msg.textContent = message;
+  modal.removeAttribute("class", "closed");
+  // add event listeners for closing
+  btn.addEventListener("click", () => {
+    modal.className = "closed";
+  });
+  modal.addEventListener("click", e => {
+    // close modal if user clicks outside of popup
+    if (e.target.dataset.popup !== "true") {
+      modal.className = "closed";
+    }
+  });
 }
 
 function flipCard() {
