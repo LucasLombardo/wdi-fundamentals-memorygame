@@ -1,4 +1,9 @@
-const cards = ["queen", "queen", "king", "king"];
+const cards = [
+  { rank: "queen", suit: "hearts", cardImg: "images/queen-of-hearts.png" },
+  { rank: "queen", suit: "diamonds", cardImg: "images/queen-of-diamonds.png" },
+  { rank: "king", suit: "hearts", cardImg: "images/king-of-hearts.png" },
+  { rank: "king", suit: "diamonds", cardImg: "images/king-of-diamonds.png" }
+];
 
 const cardsInPlay = [];
 
@@ -13,8 +18,11 @@ function checkForMatch() {
 }
 
 function flipCard(cardId) {
-  console.log("user flipped " + cards[cardId]);
-  cardsInPlay.push(cards[cardId]);
+  console.log("user flipped " + cards[cardId].rank);
+  console.log(
+    `flipped suit = ${cards[cardId].suit} and img = ${cards[cardId].cardImg}`
+  );
+  cardsInPlay.push(cards[cardId].rank);
   checkForMatch();
 }
 
