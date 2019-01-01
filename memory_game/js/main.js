@@ -6,12 +6,55 @@ let cards = [
   { rank: "king", suit: "hearts", cardImg: "images/king-of-hearts.png" },
   { rank: "king", suit: "diamonds", cardImg: "images/king-of-diamonds.png" }
 ];
-
 let cardsInPlay = [];
 
-function checkForMatch(cardId, cardClicked) {
-  cardClicked.setAttribute("src", cards[cardId].cardImg);
+init();
+
+function init() {
+  // create initial board
+  createBoard();
+  // add event listeners on the reset game buttons
+  const resetBtns = document.querySelectorAll("reset");
+  resetBtns.forEach(node => {
+    node.addEventListener("click", createBoard);
+  });
+}
+
+// LOGIC FUNCTIONS
+
+function createBoard() {
+  // randomize cards
+  cards = randomizeArr(cards);
+  // clear current cards in play
+  cardsInPlay = [];
+  document.querySelector("#game-board").innerHTML = "";
+  // set board with current cards
+  setBoard();
+}
+
+function setBoard() {
+  // sets the board as the current cards
+  for (let i = 0; i < cards.length; i++) {
+    let cardElement = document.createElement("img");
+    cardElement.setAttribute("src", "images/back.png");
+    cardElement.setAttribute("data-id", i);
+    cardElement.addEventListener("click", flipCard);
+    document.querySelector("#game-board").appendChild(cardElement);
+  }
+}
+
+function flipCard() {
+  const cardId = this.getAttribute("data-id");
+  // push flipped card to cardsInPlay
+  cardsInPlay.push(cards[cardId].rank);
+  // change cards image to the front of card
+  this.setAttribute("src", cards[cardId].cardImg);
+  checkForMatch();
+}
+
+function checkForMatch() {
   if (cardsInPlay.length === 2) {
+    // if two cards are in play, display a message whether user won
     if (cardsInPlay[0] === cardsInPlay[1]) {
       openModal("You found a match!");
     } else {
@@ -20,7 +63,22 @@ function checkForMatch(cardId, cardClicked) {
   }
 }
 
+// HELPER FUNCTIONS
+
+function randomizeArr(arr) {
+  // randomizes an array's order
+  const randArr = [];
+  while (randArr.length < arr.length) {
+    const rand = Math.round(Math.random() * (arr.length - 1));
+    if (randArr.indexOf(arr[rand]) === -1) {
+      randArr.push(arr[rand]);
+    }
+  }
+  return randArr;
+}
+
 function openModal(message) {
+  // opens a modal popup with the given message
   const modal = document.querySelector("#modal");
   const msg = document.querySelector("#msg");
   const btn = document.querySelector("#close-modal");
@@ -38,43 +96,3 @@ function openModal(message) {
     }
   });
 }
-
-function flipCard() {
-  const cardId = this.getAttribute("data-id");
-  cardsInPlay.push(cards[cardId].rank);
-  checkForMatch(cardId, this);
-}
-
-function createBoard() {
-  for (let i = 0; i < cards.length; i++) {
-    let cardElement = document.createElement("img");
-    cardElement.setAttribute("src", "images/back.png");
-    cardElement.setAttribute("data-id", i);
-    cardElement.addEventListener("click", flipCard);
-    document.querySelector("#game-board").appendChild(cardElement);
-  }
-}
-
-function resetBoard() {
-  //randomize cards
-  cards = randomizeArr(cards);
-  // reset cards in play and clar board
-  cardsInPlay = [];
-  document.querySelector("#game-board").innerHTML = "";
-  // set board
-  createBoard();
-}
-
-function randomizeArr(arr) {
-  // randomizes an arrays order
-  const randArr = [];
-  while (randArr.length < arr.length) {
-    const rand = Math.round(Math.random() * (arr.length - 1));
-    if (randArr.indexOf(arr[rand]) === -1) {
-      randArr.push(arr[rand]);
-    }
-  }
-  return randArr;
-}
-
-createBoard();
